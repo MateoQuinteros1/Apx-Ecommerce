@@ -1,3 +1,4 @@
+export const runtime = "nodejs";
 import { sequelizedb } from "@/lib/sequelize/sequelize";
 import { User } from "@/models/user";
 
