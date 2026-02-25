@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 import { User } from "../../models/user";
 import { Auth } from "../../models/auth";
 import { Order } from "../../models/order";
+import pg from "pg";
 
 let sequelize: Sequelize;
 
@@ -14,6 +15,7 @@ export function getSequelize() {
       {
         host: process.env.DB_HOST,
         dialect: "postgres",
+        dialectModule: pg,
         dialectOptions: {
           ssl: {
             require: true,
