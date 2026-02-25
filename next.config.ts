@@ -6,20 +6,8 @@ const nextConfig: NextConfig = {
     "sequelize-typescript",
     "pg",
     "pg-hstore",
+    "pg-native",
   ],
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals = [
-        ...(Array.isArray(config.externals) ? config.externals : []),
-        "pg",
-        "pg-hstore",
-        "pg-native",
-        "sequelize",
-        "sequelize-typescript",
-      ];
-    }
-    return config;
-  },
 };
 
 export default nextConfig;
