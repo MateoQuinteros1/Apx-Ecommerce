@@ -1,5 +1,4 @@
-export const runtime = "nodejs";
-import { sequelizedb } from "@/lib/sequelize/sequelize";
+import { getSequelize } from "@/lib/sequelize/sequelize";
 import { User } from "@/models/user";
 
 export async function GET(request: Request) {
@@ -10,7 +9,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await sequelizedb.authenticate();
+    await getSequelize().authenticate();
     console.log("Conectado a la DB");
     return Response.json({ message: "Conectado a la DB" });
   } catch (error) {
