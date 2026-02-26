@@ -3,7 +3,7 @@ import { SearchController } from "@/controllers/search";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { productId: string } },
+  { params }: { params: Promise<{ productId: string }> },
 ) {
   //Necesito el await para que funcione correctamente. Sin él no devuelve nada.
   try {

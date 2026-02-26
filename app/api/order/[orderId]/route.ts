@@ -7,7 +7,7 @@ import { OrderController } from "@/controllers/order";
 
 export const GET = authTokenMiddleware(async function GetOrderByIdHandler(
   request: AuthenticatedRequest,
-  { params }: { params: { orderId: string } },
+  { params }: { params: Promise<{ orderId: string }> },
 ) {
   try {
     const { orderId } = await params;
