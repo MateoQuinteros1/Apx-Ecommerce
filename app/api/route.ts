@@ -1,10 +1,14 @@
 import { getSequelize } from "@/lib/sequelize/sequelize";
 import { User } from "@/models/user";
+import { ProductController } from "@/controllers/products";
 
 export async function GET(request: Request) {
-  const response = await fetch("https://api.vercel.app/products");
-  const products = await response.json();
-  return Response.json(products);
+  const res = await ProductController.incrementOrDecreaseProductStock(
+    "recwBQnAY12SX9Rgd",
+    "decrease",
+    1,
+  );
+  return Response.json({ message: "Hello world", product: res });
 }
 
 export async function POST(request: Request) {

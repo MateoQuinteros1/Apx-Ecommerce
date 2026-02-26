@@ -1,4 +1,4 @@
-import { verify, JwtPayload, decode } from "jsonwebtoken";
+import { verify, JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 
 // Extiende NextRequest para incluir el payload del JWT decodificado
@@ -8,10 +8,11 @@ export interface AuthenticatedRequest extends NextRequest {
 
 type Handler = (
   req: AuthenticatedRequest,
+  params?: any,
 ) => Promise<NextResponse> | NextResponse;
 
 export const authTokenMiddleware = (handler: Handler) => {
-  return async (req: AuthenticatedRequest): Promise<NextResponse> => {
+  return async (req: AuthenticatedRequest, params?: any): Promise<NextResponse> => {
     try {
       const authHeader = req.headers.get("authorization");
       const token = authHeader?.split(" ")[1];
@@ -28,7 +29,7 @@ export const authTokenMiddleware = (handler: Handler) => {
       // Adjunta el payload decodificado al request para que el handler lo use
       req.user = decoded;
 
-      return handler(req);
+      return handler(req, params);
     } catch {
       return NextResponse.json(
         { error: "Unauthorized: Invalid token" },

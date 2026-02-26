@@ -9,6 +9,7 @@ import {
   ForeignKey,
   Max,
   Min,
+  BelongsTo,
 } from "sequelize-typescript";
 import {
   type CreationOptional,
@@ -46,4 +47,7 @@ export class Order extends Model<
   //status posibles: pending, completed, cancelled
   @Column(DataType.ENUM("pending", "completed", "cancelled"))
   declare status: string;
+
+  @BelongsTo(() => User)
+  declare user: CreationOptional<User>;
 }
