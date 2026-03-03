@@ -20,10 +20,17 @@ export const POST = authTokenMiddleware(async function POSTHandler(
     );
   }
 
-  const order = await OrderController.createOrder({
-    user_id: payload.id,
-    product_id: productId,
-    quantity,
-  });
-  return NextResponse.json(order);
+  try {
+    const order = await OrderController.createOrder({
+      user_id: payload.id,
+      product_id: productId,
+      quantity,
+    });
+    return NextResponse.json(order);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
+  }
 });
