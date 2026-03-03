@@ -1,5 +1,5 @@
-import { MercadoPagoConfig, Order, Payment, Preference } from "mercadopago";
-import { PaymentGetData } from "mercadopago/dist/clients/payment/get/types";
+import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_TOKEN as string,
@@ -7,9 +7,8 @@ const client = new MercadoPagoConfig({
 
 const pref = new Preference(client);
 
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-
 type CreatePrefOptions = {
+  payerEmail: string;
   productName: string;
   productId: string;
   price: number;
@@ -17,6 +16,7 @@ type CreatePrefOptions = {
   transactionId: string;
 };
 
+// Retorna el link del pago (entre otras cosas)
 export async function createPreference(options: CreatePrefOptions) {
   const newPref = await pref.create({
     body: {
@@ -34,12 +34,17 @@ export async function createPreference(options: CreatePrefOptions) {
         failure: `${BASE_URL}/failure`,
         pending: `${BASE_URL}/pending`,
       },
+      payer: {
+        email: options.payerEmail,
+      },
+      notification_url: `${BASE_URL}/api/ipn/mercadopago`,
     },
   });
 
   return newPref;
 }
 
+// Función para obtener el estado de un pago por su ID
 export async function getPaymentStatus(paymentId: string) {
   const payment = new Payment(client);
   const paymentStatus = await payment.get({ id: paymentId });

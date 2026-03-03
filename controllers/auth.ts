@@ -37,6 +37,12 @@ export class AuthController {
     await sendVerificationCode(email, verificationCode);
   }
 
+  public static async getAuthById(id: string): Promise<Auth | null> {
+    await initDb();
+    const auth = await Auth.findOne({ where: { id } });
+    return auth;
+  }
+
   public static async verifyCode(email: string, code: number) {
     await initDb();
 

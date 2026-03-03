@@ -12,7 +12,10 @@ type Handler = (
 ) => Promise<NextResponse> | NextResponse;
 
 export const authTokenMiddleware = (handler: Handler) => {
-  return async (req: AuthenticatedRequest, params?: any): Promise<NextResponse> => {
+  return async (
+    req: AuthenticatedRequest,
+    params?: any,
+  ): Promise<NextResponse> => {
     try {
       const authHeader = req.headers.get("authorization");
       const token = authHeader?.split(" ")[1];

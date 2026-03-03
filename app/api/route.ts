@@ -1,14 +1,18 @@
 import { getSequelize } from "@/lib/sequelize/sequelize";
 import { User } from "@/models/user";
-import { ProductController } from "@/controllers/products";
+import { sendOrderConfirmation } from "@/lib/mail/nodemailer";
 
 export async function GET(request: Request) {
-  const res = await ProductController.incrementOrDecreaseProductStock(
-    "recwBQnAY12SX9Rgd",
-    "decrease",
-    1,
-  );
-  return Response.json({ message: "Hello world", product: res });
+  await sendOrderConfirmation("mateoquinteros150@gmail.com", "cancelled", {
+    title: "Zapatillas Nike Air Force 1",
+    price: 100000,
+    description:
+      "Zapatillas clásicas de Nike con estilo atemporal y comodidad excepcional.",
+    image_url:
+      "https://nikearprod.vtexassets.com/arquivos/ids/155415/CW2288_111_A_PREM-hei-3144-wid-3144-fmt.jpg?v=638086277591330000",
+    quantity: 2,
+  });
+  return Response.json({ message: "Correo de confirmación enviado" });
 }
 
 export async function POST(request: Request) {

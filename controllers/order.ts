@@ -3,6 +3,8 @@ import { initDb } from "@/lib/sequelize/init";
 import { SearchController } from "./search";
 import { createPreference } from "@/lib/mercadopago";
 import { getPaymentStatus } from "@/lib/mercadopago";
+import { AuthController } from "./auth";
+import { sendOrderConfirmation } from "@/lib/mail/nodemailer";
 
 //Tipo para el parametro que recibe la funcion createOrder
 type CreateOrderParams = {
@@ -83,10 +85,13 @@ export class OrderController {
 
   public static async createOrder(params: CreateOrderParams) {
     await initDb();
+
+    //Obtenemos los datos del producto para calcular el precio total y crear la preferencia de pago en MercadoPago
     const productData = (await SearchController.getProductById(
       params.product_id,
     )) as unknown as Product;
 
+    //Creamos la orden en la base de datos con estado "pending"
     const newOrder = await Order.create({
       user_id: params.user_id,
       product_id: params.product_id,
@@ -94,7 +99,13 @@ export class OrderController {
       total_price: productData["Unit cost"] * params.quantity,
       status: "pending",
     });
+
+    //Antes de crear la preferencia, obtenemos el email del comprador
+    const authData = await AuthController.getAuthById(params.user_id);
+
+    //Crear preferencia de pago en MercadoPago.
     const newPreference = await createPreference({
+      payerEmail: authData!.email,
       productName: productData.Name,
       productId: params.product_id,
       price: productData["Unit cost"],
@@ -105,23 +116,50 @@ export class OrderController {
   }
 
   public static async confirmOrder(data: WebHookBody) {
+    //Solo procesamos el webhook si el tipo de evento es "payment"
     if (data.type === "payment") {
       await initDb();
       const mpPayment = await getPaymentStatus(data.data.id);
       //En caso de que salga bien el pago
       if (mpPayment.status === "approved") {
-        await Order.update(
+        //Actualizamos el estado de la orden a "completed" en la base de datos.
+        const [updatedRowsCount, updatedOrders] = await Order.update(
           { status: "completed" },
-          { where: { id: mpPayment.external_reference } },
+          { where: { id: mpPayment.external_reference }, returning: true },
         );
-        //En caso de que salga mal el pago o el usuario lo cancele
+
+        //Obtenemos la informacion del producto para enviarla en el email de confirmacion al comprador.
+        const order = updatedOrders[0];
+        const product = (await SearchController.getProductById(
+          order.product_id,
+        )) as unknown as Product;
+
+        //Enviamos el mail al usuario
+        await sendOrderConfirmation(
+          mpPayment.payer?.email || "",
+          mpPayment.status,
+          {
+            title: product.Name as string,
+            price: product["Unit cost"] as number,
+            description: product.Description as string,
+            image_url: product.Images[0]?.url || "",
+            quantity: order.quantity,
+          },
+        );
       } else if (
+        //En caso de que salga mal el pago o el usuario lo cancele
         mpPayment.status === "cancelled" ||
         mpPayment.status === "rejected"
       ) {
         await Order.update(
           { status: "cancelled" },
           { where: { id: mpPayment.external_reference } },
+        );
+
+        //Enviamos un email al usaurio notificando que el pago no se pudo completar
+        await sendOrderConfirmation(
+          mpPayment.payer?.email || "",
+          mpPayment.status,
         );
       }
     }

@@ -8,10 +8,10 @@ import { OrderController } from "@/controllers/order";
 export const POST = authTokenMiddleware(async function POSTHandler(
   request: AuthenticatedRequest,
 ) {
+  const payload = request.user as { id: string; iat: number; exp: number };
   const { searchParams } = request.nextUrl;
   const productId = searchParams.get("productId");
   const quantity = Number(searchParams.get("quantity"));
-  const payload = request.user as { id: string; iat: number; exp: number };
 
   if (!productId || !quantity) {
     return NextResponse.json(
