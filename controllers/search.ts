@@ -52,4 +52,15 @@ export class SearchController {
     });
     return product;
   }
+
+  public static async getAllProductIds() {
+    const results = await client.searchSingleIndex({
+      indexName,
+      searchParams: {
+        attributesToRetrieve: ["objectID"],
+        filters: "'In stock':true",
+      },
+    });
+    return results.hits.map((hit) => hit.objectID);
+  }
 }
