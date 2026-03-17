@@ -17,7 +17,7 @@ export class AuthController {
     const existingAuth = await Auth.findOne({ where: { email } });
     if (!existingAuth) {
       const newName = email.split("@")[0];
-      const user = await User.create({ name: newName });
+      const user = await User.create({ name: newName, email });
       await Auth.create({
         email,
         verification_code: verificationCode,

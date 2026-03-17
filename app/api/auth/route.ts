@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
       message: "Verification code sent successfully",
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof z.ZodError) {
       if (error.issues[0].code === "unrecognized_keys") {
         const errors = error.issues[0].keys.join(", ");

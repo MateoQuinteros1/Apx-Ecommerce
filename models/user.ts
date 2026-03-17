@@ -9,6 +9,7 @@ import {
   IsUUID,
   Length,
   Unique,
+  IsEmail,
 } from "sequelize-typescript";
 import {
   type CreationOptional,
@@ -26,6 +27,12 @@ export class User extends Model<
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   declare id: CreationOptional<string>;
+
+  @AllowNull(false)
+  @Unique
+  @IsEmail
+  @Column(DataType.STRING)
+  declare email: string;
 
   @AllowNull(false)
   @Unique
