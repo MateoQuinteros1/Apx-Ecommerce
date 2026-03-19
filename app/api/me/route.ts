@@ -6,6 +6,12 @@ import {
 import { NextResponse } from "next/server";
 import z from "zod";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 const updateUserDataSchema = z.strictObject({
   name: z.string().min(3).max(30),
   phone: z.string().min(8).max(20),
@@ -37,7 +43,7 @@ async function updateUserDataHandler(req: AuthenticatedRequest) {
       payload.id,
       validatedBody,
     );
-    return NextResponse.json(updatedUser);
+    return NextResponse.json(updatedUser, { headers: corsHeaders });
   } catch (error) {
     // Errores de validación del request
     if (error instanceof z.ZodError) {
