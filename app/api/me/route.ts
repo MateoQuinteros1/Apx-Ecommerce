@@ -12,6 +12,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+
 const updateUserDataSchema = z.strictObject({
   name: z.string().min(3).max(30),
   phone: z.string().min(8).max(20),
@@ -22,11 +26,11 @@ async function getUserHandler(req: AuthenticatedRequest) {
   try {
     const payload = req.user as { id: string; iat: number; exp: number };
     const user = await UserController.getUserData(payload.id);
-    return NextResponse.json(user);
+    return NextResponse.json(user, { headers: corsHeaders });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
 }
@@ -53,19 +57,19 @@ async function updateUserDataHandler(req: AuthenticatedRequest) {
           {
             error: `Unrecognized keys: ${errors}`,
           },
-          { status: 400 },
+          { status: 400, headers: corsHeaders },
         );
       }
       return NextResponse.json(
         {
           error: error.issues[0],
         },
-        { status: 400 },
+        { status: 400, headers: corsHeaders },
       );
     }
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500, headers: corsHeaders },
     );
   }
 }
