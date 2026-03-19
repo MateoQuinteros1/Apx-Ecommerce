@@ -1,6 +1,12 @@
 import { verify, JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 // Extiende NextRequest para incluir el payload del JWT decodificado
 export interface AuthenticatedRequest extends NextRequest {
   user?: JwtPayload | string;
@@ -23,7 +29,7 @@ export const authTokenMiddleware = (handler: Handler) => {
       if (!token) {
         return NextResponse.json(
           { error: "Unauthorized: No token provided" },
-          { status: 401 },
+          { status: 401, headers: corsHeaders },
         );
       }
 
@@ -36,7 +42,7 @@ export const authTokenMiddleware = (handler: Handler) => {
     } catch {
       return NextResponse.json(
         { error: "Unauthorized: Invalid token" },
-        { status: 401 },
+        { status: 401, headers: corsHeaders },
       );
     }
   };
