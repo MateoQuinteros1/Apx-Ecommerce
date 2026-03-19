@@ -11,7 +11,8 @@ export function proxy(request: NextRequest) {
       status: 204,
       headers: {
         "Access-Control-Allow-Origin": isAllowed ? origin : "",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Methods":
+          "GET, POST, OPTIONS, PATCH, PUT, DELETE",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Access-Control-Max-Age": "86400", // cachea el preflight 24hs
       },
