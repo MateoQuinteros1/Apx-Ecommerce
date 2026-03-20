@@ -76,5 +76,5 @@ export class User extends Model<
 
   // Relacion con orders
   @HasMany(() => Order)
-  declare orders: Order[];
+  declare orders: CreationOptional<Order[]>;
 }
