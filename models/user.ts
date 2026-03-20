@@ -10,12 +10,14 @@ import {
   Length,
   Unique,
   IsEmail,
+  HasMany,
 } from "sequelize-typescript";
 import {
   type CreationOptional,
   InferAttributes,
   InferCreationAttributes,
 } from "sequelize";
+import { Order } from "./order";
 
 @Table({ timestamps: true, tableName: "users" })
 export class User extends Model<
@@ -71,4 +73,8 @@ export class User extends Model<
   @AllowNull(true)
   @Column(DataType.STRING(50))
   declare country: CreationOptional<string>;
+
+  // Relacion con orders
+  @HasMany(() => Order)
+  declare orders: Order[];
 }

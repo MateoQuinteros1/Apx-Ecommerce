@@ -1,5 +1,6 @@
 import { User } from "@/models/user";
 import { initDb } from "@/lib/sequelize/init";
+import { Order } from "@/models/order";
 
 type UpdateUserFields = {
   name?: string;
@@ -19,7 +20,9 @@ type UpdateUserAddressFields = {
 export class UserController {
   public static async getUserData(user_id: string) {
     await initDb();
-    const user = await User.findByPk(user_id);
+    const user = await User.findByPk(user_id, {
+      include: [Order],
+    });
     if (!user) {
       throw new Error("USER_NOT_FOUND");
     }
