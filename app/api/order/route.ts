@@ -28,6 +28,7 @@ export const POST = authTokenMiddleware(async function POSTHandler(
     });
     return NextResponse.json(order);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

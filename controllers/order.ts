@@ -112,7 +112,7 @@ export class OrderController {
       quantity: params.quantity,
       transactionId: newOrder.id,
     });
-    return newPreference.sandbox_init_point;
+    return { payment_url: newPreference.init_point };
   }
 
   public static async confirmOrder(data: WebHookBody) {

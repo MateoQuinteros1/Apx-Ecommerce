@@ -5,7 +5,7 @@ import { SearchController } from "@/controllers/search";
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
 
-  const query = searchParams.get("query") ?? "";
+  const query = searchParams.get("q") ?? "";
   const { limit, offset } = formatLimitAndPage(
     searchParams.get("limit"),
     searchParams.get("offset"),
