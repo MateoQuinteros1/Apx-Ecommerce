@@ -63,4 +63,54 @@ export class SearchController {
     });
     return results.hits.map((hit) => hit.objectID);
   }
+
+  public static async getProductsByCategory(
+    category: string,
+    limit: number,
+    offset: number,
+  ) {
+    const results = await client.searchSingleIndex({
+      indexName,
+      searchParams: {
+        query: "",
+        offset,
+        length: limit,
+        filters: `'In stock':true AND Type:"${category}"`,
+      },
+    });
+
+    return {
+      results: results.hits,
+      pagination: {
+        offset,
+        limit,
+        total: results.nbHits,
+      },
+    };
+  }
+
+  public static async getProductsByHomeRoom(
+    homeRoom: string,
+    limit: number,
+    offset: number,
+  ) {
+    const results = await client.searchSingleIndex({
+      indexName,
+      searchParams: {
+        query: "",
+        offset,
+        length: limit,
+        filters: `'In stock':true AND Settings:"${homeRoom}"`,
+      },
+    });
+
+    return {
+      results: results.hits,
+      pagination: {
+        offset,
+        limit,
+        total: results.nbHits,
+      },
+    };
+  }
 }
