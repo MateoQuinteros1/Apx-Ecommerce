@@ -17,8 +17,8 @@ export async function OPTIONS() {
 }
 
 const updateUserDataSchema = z.strictObject({
-  name: z.string().min(3).max(30),
-  phone: z.string().min(8).max(20),
+  name: z.string().min(3).max(30).optional(),
+  phone: z.string().min(8).max(20).optional(),
 });
 
 //Get user data
