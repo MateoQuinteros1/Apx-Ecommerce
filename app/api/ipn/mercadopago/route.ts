@@ -7,7 +7,7 @@ import { validateMercadoPagoWebhook } from "@/lib/mercadopago/validateMercadoPag
 export async function POST(request: NextRequest) {
   try {
     //Valida que la solicitud proviene de mercado pago
-    await validateMercadoPagoWebhook(request);
+    //await validateMercadoPagoWebhook(request);
 
     //Se confirma (o no) la orden dependiendo de la información que se reciba.
     const body = (await request.json()) as WebHookBody;
