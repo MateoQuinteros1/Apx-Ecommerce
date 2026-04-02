@@ -116,12 +116,16 @@ export class OrderController {
   }
 
   public static async confirmOrder(data: WebHookBody) {
+    console.log("Entra al confirmOrder");
     //Solo procesamos el webhook si el tipo de evento es "payment"
     if (data.type === "payment") {
+      console.log("Entra al if");
       await initDb();
       const mpPayment = await getPaymentStatus(data.data.id);
+      console.log("mpPayment.payer", mpPayment.payer);
       //En caso de que salga bien el pago
       if (mpPayment.status === "approved") {
+        console.log("Entra al approved");
         //Actualizamos el estado de la orden a "completed" en la base de datos.
         const [updatedRowsCount, updatedOrders] = await Order.update(
           { status: "completed" },
