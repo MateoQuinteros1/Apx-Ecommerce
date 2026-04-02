@@ -38,6 +38,9 @@ export async function createPreference(options: CreatePrefOptions) {
         email: options.payerEmail,
       },
       notification_url: `${BASE_URL}/api/ipn/mercadopago`,
+      metadata: {
+        userEmail: options.payerEmail,
+      },
     },
   });
 

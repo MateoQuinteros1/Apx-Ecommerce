@@ -102,6 +102,7 @@ export class OrderController {
 
     //Antes de crear la preferencia, obtenemos el email del comprador
     const authData = await AuthController.getAuthById(params.user_id);
+    console.log("authData", authData?.email);
 
     //Crear preferencia de pago en MercadoPago.
     const newPreference = await createPreference({
@@ -140,7 +141,7 @@ export class OrderController {
 
         //Enviamos el mail al usuario
         await sendOrderConfirmation(
-          mpPayment.payer?.email || "",
+          mpPayment.metadata.userEmail || "",
           mpPayment.status,
           {
             title: product.Name as string,
