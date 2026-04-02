@@ -122,7 +122,7 @@ export class OrderController {
       console.log("Entra al if");
       await initDb();
       const mpPayment = await getPaymentStatus(data.data.id);
-      console.log("mpPayment.payer", mpPayment.payer);
+      console.log("mpPayment.payer", mpPayment);
       //En caso de que salga bien el pago
       if (mpPayment.status === "approved") {
         console.log("Entra al approved");
