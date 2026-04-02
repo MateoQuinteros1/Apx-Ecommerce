@@ -141,7 +141,7 @@ export class OrderController {
 
         //Enviamos el mail al usuario
         await sendOrderConfirmation(
-          mpPayment.metadata.userEmail || "",
+          mpPayment.metadata.user_email || "",
           mpPayment.status,
           {
             title: product.Name as string,
