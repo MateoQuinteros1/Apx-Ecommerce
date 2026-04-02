@@ -37,7 +37,7 @@ export async function createPreference(options: CreatePrefOptions) {
       payer: {
         email: options.payerEmail,
       },
-      notification_url: `https://webhook.site/8e7842fd-c151-4403-8751-5574dece62c7`,
+      notification_url: `${BASE_URL}/api/ipn/mercadopago`,
     },
   });
 
