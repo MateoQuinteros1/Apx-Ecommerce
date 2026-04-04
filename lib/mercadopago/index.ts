@@ -1,5 +1,7 @@
 import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
-const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+const BACKEND_BASE_URL =
+  process.env.BACKEND_BASE_URL || "http://localhost:3000";
+const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_TOKEN as string,
@@ -30,14 +32,14 @@ export async function createPreference(options: CreatePrefOptions) {
       ],
       external_reference: options.transactionId,
       back_urls: {
-        success: `${BASE_URL}/success`,
-        failure: `${BASE_URL}/failure`,
-        pending: `${BASE_URL}/pending`,
+        success: `${FRONTEND_BASE_URL}/thanks`,
+        failure: `${FRONTEND_BASE_URL}/failure`,
+        pending: `${FRONTEND_BASE_URL}/pending`,
       },
       payer: {
         email: options.payerEmail,
       },
-      notification_url: `${BASE_URL}/api/ipn/mercadopago`,
+      notification_url: `${BACKEND_BASE_URL}/api/ipn/mercadopago`,
       metadata: {
         userEmail: options.payerEmail,
       },
