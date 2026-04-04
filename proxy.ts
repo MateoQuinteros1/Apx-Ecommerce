@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://habu-ecommerce.vercel.app/",
+  "https://habu-ecommerce.vercel.app",
 ];
 
 export function proxy(request: NextRequest) {
