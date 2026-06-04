@@ -12,10 +12,21 @@ export async function POST(request: NextRequest) {
     const json = await request.json();
     const { email, code } = AuthTokenSchema.parse(json);
     const token = await AuthController.verifyCode(email, code);
-    return NextResponse.json({
+
+    const response = NextResponse.json({
       message: "Token generated successfully",
       token,
     });
+
+    response.cookies.set("session_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 días
+    });
+
+    return response;
   } catch (error: any) {
     // Errores de validez del código de verificación
     if (

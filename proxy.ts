@@ -17,7 +17,8 @@ export function proxy(request: NextRequest) {
         "Access-Control-Allow-Methods":
           "GET, POST, OPTIONS, PATCH, PUT, DELETE",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        "Access-Control-Max-Age": "86400", // cachea el preflight 24hs
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Max-Age": "86400",
       },
     });
   }
@@ -25,6 +26,7 @@ export function proxy(request: NextRequest) {
   // Para el resto de requests, inyecta el header en la respuesta
   const response = NextResponse.next();
   response.headers.set("Access-Control-Allow-Origin", isAllowed ? origin : "");
+  response.headers.set("Access-Control-Allow-Credentials", "true");
   return response;
 }
 

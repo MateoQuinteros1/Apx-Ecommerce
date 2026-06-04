@@ -2,7 +2,7 @@ import { verify, JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://habu-ecommerce.vercel.app",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
@@ -24,7 +24,8 @@ export const authTokenMiddleware = (handler: Handler) => {
   ): Promise<NextResponse> => {
     try {
       const authHeader = req.headers.get("authorization");
-      const token = authHeader?.split(" ")[1];
+      const token =
+        authHeader?.split(" ")[1] ?? req.cookies.get("session_token")?.value;
 
       if (!token) {
         return NextResponse.json(
